@@ -21,28 +21,30 @@ import org.apache.camel.spring.Main;
 
 /**
  * A simple example router to show how to define the route with Java DSL
- *
+ * 
  * @version $Revision: 1206356 $
  */
 public class MyRouteBuilder extends RouteBuilder {
     /**
      * Allow this route to be run as an application
-     *
+     * 
      * @param args
      */
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         new Main().run(args);
     }
 
-    public void configure() {
+    @Override
+    public void configure() throws Exception {
+
+        includeRoutes(new AppendFileRouteBuilder());
         // set up the transform bean
         MyTransform transform = new MyTransform();
         transform.setPrefix("JavaDSL");
-        
+
         from("timer://javaTimer?fixedRate=true&period=2000")
-            .bean(transform, "transform")
-            .to("log:ExampleRouter");        
+                .bean(transform, "transform")
+                .to("log:ExampleRouter");
     }
 
-    
 }
