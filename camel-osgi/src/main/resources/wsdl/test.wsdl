@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="KON" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="htt://example.com/calculator" targetNamespace="htt://example.com/calculator" xmlns:smt="htt://example.com/calculator/types">
+
+	<types>
+		<xs:schema targetNamespace="htt://example.com/calculator/types">
+			<xs:include schemaLocation="test-types.xsd" />
+		</xs:schema>
+	</types>
+
+	<message name="operationException">
+		<part name="details" element="smt:exceptionDetails" />
+	</message>
+
+	<message name="addRequest">
+		<part name="body" element="smt:addRequest" />
+	</message>
+
+	<message name="addResponse">
+		<part name="body" element="smt:addResponse" />
+	</message>
+
+	<portType name="AddPortType">
+		<operation name="add">
+			<input message="tns:addRequest" />
+			<output message="tns:addResponse" />
+			<fault name="fault" message="tns:operationException" />
+		</operation>
+
+	</portType>
+
+
+	<binding name="AddBiding" type="tns:AddPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+
+		<operation name="add">
+			<soap:operation soapAction="htt://example.com/calculator/add" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+			<fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</fault>
+		</operation>
+	</binding>
+
+	<service name="CalculatorService">
+		<port name="AddPort" binding="tns:AddBiding">
+			<soap:address location="htt://example.com/calculator/test?wsdl" />
+		</port>
+	</service>
+</definitions>

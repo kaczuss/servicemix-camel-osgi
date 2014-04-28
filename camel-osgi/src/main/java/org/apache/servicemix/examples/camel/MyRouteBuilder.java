@@ -41,6 +41,7 @@ public class MyRouteBuilder extends RouteBuilder {
         // set up the transform bean
         MyTransform transform = new MyTransform();
         transform.setPrefix("JavaDSL");
+        transform.setVerbose(false);
 
         from("timer://javaTimer?fixedRate=true&period=2000")
                 .bean(transform, "transform")
