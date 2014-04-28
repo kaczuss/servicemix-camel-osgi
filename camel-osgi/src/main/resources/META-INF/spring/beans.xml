@@ -7,6 +7,7 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ctx="http://www.springframework.org/schema/context"
 	xmlns:camel="http://camel.apache.org/schema/spring" xmlns:osgix="http://www.springframework.org/schema/osgi-compendium" xmlns:cxf="http://camel.apache.org/schema/cxf"
+	xmlns:smt="htt://example.com/calculator/types"
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
@@ -29,17 +30,21 @@
 			<from uri="timer://springTimer?fixedRate=true&amp;period=2000" />
 			<bean ref="myTransform" method="transform" />
 			<to uri="log:ExampleRouter" />
-
 		</route>
 
 		<camel:route>
 			<camel:from uri="cxf:bean:calculatorEnpoint" />
 			<to uri="log:com.example.cxf.calculator" />
-			<!-- <camel:setBody> -->
-			<!-- <camel:constant> -->
-
-			<!-- </camel:constant> -->
-			<!-- </camel:setBody> -->
+			<camel:setHeader headerName="value"><camel:xpath>/smt:addRequest/value</camel:xpath></camel:setHeader>
+			<camel:setBody>
+				<simple>
+					<![CDATA[
+					 	<typ:addResponse xmlns:typ="htt://example.com/calculator/types">
+							<value>${header.value}</value>
+				    	</typ:addResponse>
+					]]>
+				</simple>
+			</camel:setBody>
 		</camel:route>
 
 	</camel:camelContext>
