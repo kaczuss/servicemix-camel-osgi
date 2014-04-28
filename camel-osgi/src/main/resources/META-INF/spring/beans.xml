@@ -6,8 +6,8 @@
 	the License for the specific language governing permissions and limitations under the License. -->
 
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ctx="http://www.springframework.org/schema/context"
-	xmlns:camel="http://camel.apache.org/schema/spring" xmlns:osgix="http://www.springframework.org/schema/osgi-compendium" xmlns:cxf="http://camel.apache.org/schema/cxf"
-	xmlns:smt="htt://example.com/calculator/types"
+	xmlns:osgix="http://www.springframework.org/schema/osgi-compendium" xmlns:cxf="http://camel.apache.org/schema/cxf" xmlns:calc="htt://example.com/calculator/types"
+	xmlns:camel="http://camel.apache.org/schema/spring"
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
@@ -22,7 +22,7 @@
 		</cxf:properties>
 	</cxf:cxfEndpoint>
 
-	<camel:camelContext xmlns="http://camel.apache.org/schema/spring">
+	<camelContext xmlns="http://camel.apache.org/schema/spring" >
 		<!-- install the Java DSL route builder -->
 		<package>org.apache.servicemix.examples.camel</package>
 		<!-- install the route which is defined with xml tags -->
@@ -32,22 +32,35 @@
 			<to uri="log:ExampleRouter" />
 		</route>
 
-		<camel:route>
-			<camel:from uri="cxf:bean:calculatorEnpoint" />
-			<to uri="log:com.example.cxf.calculator" />
-			<camel:setHeader headerName="value"><camel:xpath>/smt:addRequest/value</camel:xpath></camel:setHeader>
-			<camel:setBody>
-				<simple>
+		<route>
+			<from uri="cxf:bean:calculatorEnpoint" />
+			<to uri="log:com.example.cxf.calculator.add?showAll=true" />
+			<choice>
+				<when>
+					<simple>${header.operationName} == 'add'</simple>
+					<to uri="log:com.example.cxf.calculator.add" />
+					<setHeader headerName="value">
+						<xpath>/calc:addRequest/value</xpath>
+					</setHeader>
+					<setBody>
+						<simple>
 					<![CDATA[
 					 	<typ:addResponse xmlns:typ="htt://example.com/calculator/types">
 							<value>${header.value}</value>
 				    	</typ:addResponse>
 					]]>
-				</simple>
-			</camel:setBody>
-		</camel:route>
+						</simple>
+					</setBody>
+				</when>
+				<otherwise>
+					<to uri="log:com.example.cxf.calculator.split" />
+					<to uri="xslt:xslt/split.xslt" />
+				</otherwise>
+			</choice>
 
-	</camel:camelContext>
+		</route>
+
+	</camelContext>
 
 	<bean id="myTransform" class="org.apache.servicemix.examples.camel.MyTransform">
 		<property name="prefix" value="${prefix}" />

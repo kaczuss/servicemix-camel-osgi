@@ -32,6 +32,22 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	
+	<xs:element name="splitRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="value" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+		<xs:element name="splitResponse">
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="value" type="xs:int" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 
 
 </xs:schema>

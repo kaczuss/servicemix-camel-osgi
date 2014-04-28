@@ -19,11 +19,25 @@
 	<message name="addResponse">
 		<part name="body" element="smt:addResponse" />
 	</message>
+	
+	<message name="splitRequest">
+		<part name="body" element="smt:splitRequest" />
+	</message>
+
+	<message name="splitResponse">
+		<part name="body" element="smt:splitResponse" />
+	</message>
 
 	<portType name="AddPortType">
 		<operation name="add">
 			<input message="tns:addRequest" />
 			<output message="tns:addResponse" />
+			<fault name="fault" message="tns:operationException" />
+		</operation>
+		
+		<operation name="split">
+			<input message="tns:splitRequest" />
+			<output message="tns:splitResponse" />
 			<fault name="fault" message="tns:operationException" />
 		</operation>
 
@@ -35,6 +49,19 @@
 
 		<operation name="add">
 			<soap:operation soapAction="htt://example.com/calculator/add" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+			<fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</fault>
+		</operation>
+		
+		<operation name="split">
+			<soap:operation soapAction="htt://example.com/calculator/split" />
 			<input>
 				<soap:body use="literal" />
 			</input>
