@@ -37,7 +37,7 @@ public class MyRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        includeRoutes(new AppendFileRouteBuilder());
+        //        includeRoutes(new AppendFileRouteBuilder());
         // set up the transform bean
         MyTransform transform = new MyTransform();
         transform.setPrefix("JavaDSL");
@@ -46,6 +46,7 @@ public class MyRouteBuilder extends RouteBuilder {
         from("timer://javaTimer?fixedRate=true&period=2000")
                 .bean(transform, "transform")
                 .to("log:ExampleRouter");
+
     }
 
 }

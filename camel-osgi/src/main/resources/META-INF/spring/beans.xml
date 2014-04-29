@@ -40,7 +40,7 @@
 					<simple>${header.operationName} == 'add'</simple>
 					<to uri="log:com.example.cxf.calculator.add" />
 					<setHeader headerName="value">
-						<xpath>/calc:addRequest/value</xpath>
+						<xpath>/calc:addRequest/value/text()</xpath>
 					</setHeader>
 					<setBody>
 						<simple>
